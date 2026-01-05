@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DNA Analysis | Genetic Discovery</title>
+
+    <!-- PyScript 2024 -->
+    <link
+      rel="stylesheet"
+      href="https://pyscript.net/releases/2024.8.2/core.css"
+    />
+    <script
+      type="module"
+      src="https://pyscript.net/releases/2024.8.2/core.js"
+    ></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- PyScript Config -->
+    <py-config>
+[files]
+"snp_database.py" = "snp_database.py"
+"dna_analyzer.py" = "dna_analyzer.py"
+    </py-config>
+  </head>
+  <body>
+    <!-- DNA Helix Background Animation -->
+    <div class="dna-background">
+      <div class="helix-strand strand-1"></div>
+      <div class="helix-strand strand-2"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">
+          <h1>DNA<span class="highlight"> Analysis</span></h1>
+        </div>
+        <p class="tagline">
+          Extract interesting data from your DNA for non-medical persons
+        </p>
+      </header>
+
+      <!-- Upload Section -->
+      <section class="upload-section" id="upload-section">
+        <div class="upload-card">
+          <div class="upload-area" id="upload-area">
+            <input
+              type="file"
+              id="file-input"
+              accept=".txt,.csv,.tsv,.zip"
+              hidden
+            />
+            <div class="upload-content">
+              <div class="upload-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+              </div>
+              <h3>Upload Your DNA File</h3>
+              <p>
+                23andMe, AncestryDNA, MyHeritage, FamilyTreeDNA (.txt, .csv)
+              </p>
+              <button class="upload-btn" id="upload-btn">Select File</button>
+              <button class="demo-btn" id="demo-btn">Show Demo</button>
+            </div>
+          </div>
+          <div class="file-info" id="file-info" style="display: none">
+            <span class="file-name" id="file-name"></span>
+            <span class="file-size" id="file-size"></span>
+          </div>
+        </div>
+
+        <!-- Privacy Notice -->
+        <div class="privacy-notice">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          <span
+            >Your data is processed entirely in your browser. No data is sent to
+            any server.</span
+          >
+        </div>
+      </section>
+
+      <!-- Loading Section -->
+      <section
+        class="loading-section"
+        id="loading-section"
+        style="display: none"
+      >
+        <div class="loading-card">
+          <div class="dna-loader">
+            <div class="nucleotide a"></div>
+            <div class="nucleotide t"></div>
+            <div class="nucleotide c"></div>
+            <div class="nucleotide g"></div>
+          </div>
+          <h3>Analyzing DNA...</h3>
+          <p class="loading-status" id="loading-status">Reading SNPs...</p>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results Section -->
+      <section
+        class="results-section"
+        id="results-section"
+        style="display: none"
+      >
+        <!-- Genetic Profile Header -->
+        <div class="profile-header">
+          <h2 class="profile-title">🧬 Your Genetic Profile</h2>
+        </div>
+
+        <!-- DNA Helix Visualization -->
+        <div class="dna-helix-section">
+          <div class="helix-header">
+            <h3>🔬 Your DNA's Real Appearance</h3>
+            <p>Below, the actual nucleotide pairs in your DNA are visualized</p>
+          </div>
+          <div class="dna-helix-container">
+            <canvas id="dna-helix-canvas" width="800" height="400"></canvas>
+            <div class="helix-controls">
+              <button class="helix-btn" id="helix-play-btn">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </button>
+              <button
+                class="helix-btn"
+                id="helix-pause-btn"
+                style="display: none"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                </svg>
+              </button>
+              <input
+                type="range"
+                id="helix-speed"
+                min="0.5"
+                max="3"
+                step="0.1"
+                value="1"
+                class="speed-slider"
+              />
+              <span class="speed-label"
+                >Speed: <span id="speed-value">1x</span></span
+              >
+            </div>
+          </div>
+          <div class="nucleotide-legend">
+            <div class="legend-item">
+              <span class="legend-color adenine"></span>
+              <span>A - Adenine</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color thymine"></span>
+              <span>T - Thymine</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color cytosine"></span>
+              <span>C - Cytosine</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color guanine"></span>
+              <span>G - Guanine</span>
+            </div>
+          </div>
+          <div class="dna-stats-row">
+            <div class="dna-stat">
+              <span class="dna-stat-value" id="adenine-count">0</span>
+              <span class="dna-stat-label">Adenin (A)</span>
+            </div>
+            <div class="dna-stat">
+              <span class="dna-stat-value" id="thymine-count">0</span>
+              <span class="dna-stat-label">Timin (T)</span>
+            </div>
+            <div class="dna-stat">
+              <span class="dna-stat-value" id="cytosine-count">0</span>
+              <span class="dna-stat-label">Sitozin (C)</span>
+            </div>
+            <div class="dna-stat">
+              <span class="dna-stat-value" id="guanine-count">0</span>
+              <span class="dna-stat-label">Guanin (G)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="chart-stats-container">
+          <div class="stats-overview">
+            <div class="stat-card">
+              <span class="stat-value" id="total-snps">0</span>
+              <span class="stat-label">Total SNPs</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value" id="analyzed-snps">0</span>
+              <span class="stat-label">Analyzed</span>
+            </div>
+            <div class="stat-card stat-positive">
+              <span class="stat-value" id="positive-count">0</span>
+              <span class="stat-label">✅ Positive</span>
+            </div>
+            <div class="stat-card stat-negative">
+              <span class="stat-value" id="negative-count">0</span>
+              <span class="stat-label">⚠️ Risk</span>
+            </div>
+            <div class="stat-card stat-neutral">
+              <span class="stat-value" id="neutral-count">0</span>
+              <span class="stat-label">📊 Normal</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Effect Filter Tabs -->
+        <div class="effect-filter-tabs">
+          <button class="effect-btn active" data-effect="all">
+            <span class="effect-icon">🧬</span>
+            <span class="effect-text">All Results</span>
+          </button>
+          <button class="effect-btn effect-btn-positive" data-effect="positive">
+            <span class="effect-icon">✅</span>
+            <span class="effect-text">Positive</span>
+          </button>
+          <button class="effect-btn effect-btn-negative" data-effect="negative">
+            <span class="effect-icon">⚠️</span>
+            <span class="effect-text">Risk</span>
+          </button>
+          <button class="effect-btn effect-btn-neutral" data-effect="neutral">
+            <span class="effect-icon">📊</span>
+            <span class="effect-text">Normal</span>
+          </button>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+          <button class="tab-btn active" data-category="all">
+            <span class="tab-icon">🧬</span>
+            <span class="tab-text">All</span>
+          </button>
+          <button class="tab-btn" data-category="interesting">
+            <span class="tab-icon">✨</span>
+            <span class="tab-text">Interesting</span>
+          </button>
+          <button class="tab-btn" data-category="extreme_rare">
+            <span class="tab-icon">💎</span>
+            <span class="tab-text">Very Rare</span>
+          </button>
+          <button class="tab-btn" data-category="rare">
+            <span class="tab-icon">🌟</span>
+            <span class="tab-text">Rare</span>
+          </button>
+          <button class="tab-btn" data-category="appearance">
+            <span class="tab-icon">👤</span>
+            <span class="tab-text">Appearance</span>
+          </button>
+          <button class="tab-btn" data-category="personality">
+            <span class="tab-icon">🧠</span>
+            <span class="tab-text">Personality</span>
+          </button>
+          <button class="tab-btn" data-category="disease">
+            <span class="tab-icon">🏥</span>
+            <span class="tab-text">Health</span>
+          </button>
+          <button class="tab-btn" data-category="food">
+            <span class="tab-icon">🍽️</span>
+            <span class="tab-text">Nutrition</span>
+          </button>
+          <button class="tab-btn" data-category="fitness">
+            <span class="tab-icon">💪</span>
+            <span class="tab-text">Fitness</span>
+          </button>
+          <button class="tab-btn" data-category="cognitive">
+            <span class="tab-icon">🎯</span>
+            <span class="tab-text">Cognitive</span>
+          </button>
+          <button class="tab-btn" data-category="lifestyle">
+            <span class="tab-icon">🌙</span>
+            <span class="tab-text">Lifestyle</span>
+          </button>
+          <button class="tab-btn" data-category="longevity">
+            <span class="tab-icon">⏳</span>
+            <span class="tab-text">Longevity</span>
+          </button>
+          <button class="tab-btn" data-category="immunity">
+            <span class="tab-icon">🛡️</span>
+            <span class="tab-text">Immunity</span>
+          </button>
+        </div>
+
+        <!-- Results Grid -->
+        <div class="results-grid" id="results-grid">
+          <!-- Results will be dynamically inserted here -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="empty-state" style="display: none">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="M21 21l-4.35-4.35" />
+          </svg>
+          <h3>No findings in this category</h3>
+          <p>Check other categories</p>
+        </div>
+      </section>
+
+      <!-- Disclaimer -->
+      <footer class="disclaimer" id="disclaimer" style="display: none">
+        <div class="disclaimer-content">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <div>
+            <strong>Important Warning:</strong> This application is for
+            entertainment and curiosity purposes only. It does not constitute
+            medical advice. Always consult a healthcare professional for health
+            decisions.
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Result Card Template -->
+    <template id="result-card-template">
+      <div class="result-card" data-category="">
+        <div class="card-header">
+          <span class="card-badge"></span>
+          <span class="card-rsid"></span>
+        </div>
+        <h4 class="card-title"></h4>
+        <p class="card-description"></p>
+        <div class="card-genotype">
+          <span class="genotype-label">Your Genotype:</span>
+          <span class="genotype-value"></span>
+        </div>
+        <div class="card-details">
+          <div class="detail-row">
+            <span class="detail-label">Gene:</span>
+            <span class="detail-value gene"></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Effect:</span>
+            <span class="detail-value effect"></span>
+          </div>
+          <div class="detail-row frequency-row">
+            <span class="detail-label">Population Frequency:</span>
+            <span class="detail-value frequency"></span>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- JavaScript -->
+    <script>
+      // File Upload Handling
+      const uploadArea = document.getElementById("upload-area");
+      const fileInput = document.getElementById("file-input");
+      const uploadBtn = document.getElementById("upload-btn");
+      const fileInfo = document.getElementById("file-info");
+      const fileName = document.getElementById("file-name");
+      const fileSize = document.getElementById("file-size");
+
+      // Section Elements
+      const uploadSection = document.getElementById("upload-section");
+      const loadingSection = document.getElementById("loading-section");
+      const resultsSection = document.getElementById("results-section");
+      const disclaimer = document.getElementById("disclaimer");
+
+      // Click to upload
+      uploadBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        fileInput.click();
+      });
+
+      uploadArea.addEventListener("click", () => {
+        fileInput.click();
+      });
+
+      // Demo button
+      const demoBtn = document.getElementById("demo-btn");
+      demoBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        loadDemoData();
+      });
+
+      // Drag and drop
+      uploadArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadArea.classList.add("dragover");
+      });
+
+      uploadArea.addEventListener("dragleave", () => {
+        uploadArea.classList.remove("dragover");
+      });
+
+      uploadArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove("dragover");
+        const file = e.dataTransfer.files[0];
+        if (file) handleFile(file);
+      });
+
+      // File input change
+      fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) handleFile(file);
+      });
+
+      // Handle file
+      function handleFile(file) {
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        fileInfo.style.display = "flex";
+
+        // Show loading
+        uploadSection.style.display = "none";
+        loadingSection.style.display = "flex";
+
+        // Read file
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const content = e.target.result;
+          window.dnaFileContent = content;
+
+          // Call Python analysis function directly
+          if (window.analyzeDNAContent) {
+            window.analyzeDNAContent(content);
+          } else {
+            // Fallback: wait for PyScript to be ready
+            console.log("Waiting for PyScript to initialize...");
+            const checkPyScript = setInterval(() => {
+              if (window.analyzeDNAContent) {
+                clearInterval(checkPyScript);
+                window.analyzeDNAContent(content);
+              }
+            }, 100);
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      // Format file size
+      function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+        return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+      }
+
+      // Update loading status
+      function updateLoadingStatus(status, progress) {
+        document.getElementById("loading-status").textContent = status;
+        document.getElementById("progress-fill").style.width = progress + "%";
+      }
+
+      // Show results
+      function showResults(results, snpData) {
+        loadingSection.style.display = "none";
+        resultsSection.style.display = "block";
+        disclaimer.style.display = "block";
+
+        // Calculate effect counts
+        let positiveCount = 0;
+        let negativeCount = 0;
+        let neutralCount = 0;
+
+        results.findings.forEach((finding) => {
+          const effectClass = classifyEffect(finding.effect, finding.category);
+          if (effectClass === "positive") positiveCount++;
+          else if (effectClass === "negative") negativeCount++;
+          else neutralCount++;
+        });
+
+        // Update stats
+        document.getElementById("total-snps").textContent =
+          results.total_snps.toLocaleString();
+        document.getElementById("analyzed-snps").textContent =
+          results.analyzed_snps.toLocaleString();
+        document.getElementById("positive-count").textContent = positiveCount;
+        document.getElementById("negative-count").textContent = negativeCount;
+        document.getElementById("neutral-count").textContent = neutralCount;
+
+        // Store results globally
+        window.analysisResults = results;
+        window.snpData = snpData || {};
+
+        // Initialize DNA Helix visualization
+        setTimeout(() => {
+          if (snpData) {
+            initDNAHelix(snpData);
+          } else {
+            // Use findings genotypes if no raw snp data
+            const fakeSnpData = {};
+            results.findings.forEach((f, i) => {
+              fakeSnpData["rs" + i] = { genotype: f.genotype };
+            });
+            initDNAHelix(fakeSnpData);
+          }
+        }, 100);
+
+        // Render results
+        renderResults(results.findings);
+      }
+
+      // Classify effect as positive, negative, or neutral
+      function classifyEffect(effect, category) {
+        const positiveEffects = [
+          "positive",
+          "enhanced",
+          "superior",
+          "high",
+          "fast",
+          "efficient",
+          "very_efficient",
+          "high_empathy",
+          "tolerant",
+          "warrior",
+          "protective",
+          "longevity",
+          "immune",
+          "resistant",
+          "centenarian",
+          "resilient",
+          "high_resilience",
+          "creative",
+          "highly_creative",
+          "power",
+          "endurance",
+          "good",
+          "secretor",
+          "low_inflammation",
+          "e2e2",
+          "short_sleeper",
+          "morning",
+          "dimples",
+          "curly",
+          "wavy",
+          "thick",
+          "very_thick",
+          "light",
+          "very_light",
+          "high_hdl",
+          "strong",
+          "highly_protected",
+          "protected",
+        ];
+
+        const negativeEffects = [
+          "risk",
+          "increased",
+          "high_risk",
+          "deficient",
+          "intolerant",
+          "significantly_reduced",
+          "high_inflammation",
+          "elevated",
+          "e4e4",
+          "e3e4",
+          "low",
+          "poor",
+          "less_efficient",
+          "sensitive",
+          "highly_sensitive",
+          "altered",
+          "reduced",
+          "slow",
+        ];
+
+        // Special handling for disease category - "increased" is negative
+        if (category === "disease") {
+          if (
+            [
+              "increased",
+              "high",
+              "risk",
+              "elevated",
+              "significantly_reduced",
+            ].includes(effect)
+          ) {
+            return "negative";
+          }
+          if (["normal", "e3e3", "protective", "protected"].includes(effect)) {
+            return "positive";
+          }
+        }
+
+        // For food category - some effects need context
+        if (category === "food") {
+          if (
+            ["slow", "intolerant", "deficient", "poor", "sensitive"].includes(
+              effect
+            )
+          ) {
+            return "negative";
+          }
+          if (["fast", "tolerant", "efficient", "resistant"].includes(effect)) {
+            return "positive";
+          }
+        }
+
+        if (positiveEffects.includes(effect)) return "positive";
+        if (negativeEffects.includes(effect)) return "negative";
+        return "neutral";
+      }
+
+      // Get effect icon
+      function getEffectIcon(effectClass) {
+        const icons = {
+          positive: "✅",
+          negative: "⚠️",
+          neutral: "📊",
+        };
+        return icons[effectClass] || "📊";
+      }
+
+      // Get effect label in English
+      function getEffectLabel(effect) {
+        const labels = {
+          positive: "Positive",
+          negative: "Risk",
+          neutral: "Normal",
+          carrier: "Carrier",
+          enhanced: "Enhanced",
+          superior: "Superior",
+          normal: "Normal",
+          reduced: "Reduced",
+          increased: "Increased",
+          high: "High",
+          low: "Low",
+          fast: "Fast",
+          slow: "Slow",
+          moderate: "Moderate",
+          balanced: "Balanced",
+          warrior: "Warrior",
+          worrier: "Strategist",
+          tolerant: "Tolerant",
+          intolerant: "Intolerant",
+          risk: "Risk",
+          protective: "Protective",
+          efficient: "Efficient",
+          power: "Power",
+          endurance: "Endurance",
+          mixed: "Mixed",
+        };
+        return labels[effect] || effect;
+      }
+
+      // Render results
+      function renderResults(findings) {
+        const grid = document.getElementById("results-grid");
+        const emptyState = document.getElementById("empty-state");
+        const template = document.getElementById("result-card-template");
+
+        grid.innerHTML = "";
+
+        if (findings.length === 0) {
+          emptyState.style.display = "block";
+          return;
+        }
+
+        emptyState.style.display = "none";
+
+        findings.forEach((finding, index) => {
+          const card = template.content.cloneNode(true);
+          const cardEl = card.querySelector(".result-card");
+
+          // Classify the effect
+          const effectClass = classifyEffect(finding.effect, finding.category);
+
+          cardEl.dataset.category = finding.category;
+          cardEl.dataset.effect = effectClass;
+          cardEl.classList.add("effect-" + effectClass);
+          cardEl.style.animationDelay = index * 0.05 + "s";
+
+          card.querySelector(".card-badge").textContent = getCategoryLabel(
+            finding.category
+          );
+          card.querySelector(".card-badge").className =
+            "card-badge badge-" + finding.category;
+          card.querySelector(".card-rsid").textContent = finding.rsid;
+          card.querySelector(".card-title").textContent = finding.title;
+          card.querySelector(".card-description").textContent =
+            finding.description;
+          card.querySelector(".genotype-value").textContent = finding.genotype;
+          card.querySelector(".gene").textContent = finding.gene || "-";
+
+          // Add effect with icon and color
+          const effectEl = card.querySelector(".effect");
+          effectEl.innerHTML = `<span class="effect-indicator effect-${effectClass}">${getEffectIcon(
+            effectClass
+          )} ${getEffectLabel(finding.effect)}</span>`;
+
+          card.querySelector(".frequency").textContent =
+            finding.frequency || "-";
+
+          grid.appendChild(card);
+        });
+      }
+
+      // Get category label
+      function getCategoryLabel(category) {
+        const labels = {
+          interesting: "Interesting Combination",
+          extreme_rare: "Very Rare",
+          rare: "Rare",
+          appearance: "Appearance",
+          personality: "Personality",
+          disease: "Health",
+          food: "Nutrition",
+          fitness: "Fitness",
+          cognitive: "Cognitive",
+          lifestyle: "Lifestyle",
+          longevity: "Longevity",
+          immunity: "Immunity",
+        };
+        return labels[category] || category;
+      }
+
+      // Global filter state
+      let currentCategoryFilter = "all";
+      let currentEffectFilter = "all";
+
+      // Apply combined filters
+      function applyFilters() {
+        if (!window.analysisResults) return;
+
+        let filtered = window.analysisResults.findings;
+
+        // Category filter
+        if (currentCategoryFilter !== "all") {
+          filtered = filtered.filter(
+            (f) => f.category === currentCategoryFilter
+          );
+        }
+
+        // Effect filter
+        if (currentEffectFilter !== "all") {
+          filtered = filtered.filter(
+            (f) => classifyEffect(f.effect, f.category) === currentEffectFilter
+          );
+        }
+
+        renderResults(filtered);
+      }
+
+      // Effect filter functionality
+      document.querySelectorAll(".effect-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".effect-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          currentEffectFilter = btn.dataset.effect;
+          applyFilters();
+        });
+      });
+
+      // Category filtering
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // Update active tab
+          document
+            .querySelectorAll(".tab-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          currentCategoryFilter = btn.dataset.category;
+          applyFilters();
+        });
+      });
+
+      // Demo Data
+      function loadDemoData() {
+        uploadSection.style.display = "none";
+        loadingSection.style.display = "flex";
+        updateLoadingStatus("Loading demo data...", 30);
+
+        setTimeout(() => {
+          updateLoadingStatus("Analyzing...", 60);
+
+          setTimeout(() => {
+            updateLoadingStatus("Completed!", 100);
+
+            const demoResults = {
+              total_snps: 650000,
+              analyzed_snps: 42,
+              findings: [
+                {
+                  rsid: "rs1805007",
+                  gene: "MC1R",
+                  category: "extreme_rare",
+                  title: "Red Hair Gene Carrier",
+                  description:
+                    "You are a carrier of the red hair gene. Your children may have red hair.",
+                  effect: "carrier",
+                  genotype: "CT",
+                  frequency: "~2% (Northern Europe)",
+                },
+                {
+                  rsid: "rs12913832",
+                  gene: "HERC2",
+                  category: "rare",
+                  title: "Eye Color Determinant",
+                  description:
+                    "High probability of mixed eye color (green, hazel).",
+                  effect: "carrier",
+                  genotype: "AG",
+                  frequency: "~20% (AA genotype)",
+                },
+                {
+                  rsid: "rs4680",
+                  gene: "COMT",
+                  category: "personality",
+                  title: "Warrior vs Strategist (COMT)",
+                  description:
+                    "Balanced: You have both stress tolerance and strategic thinking capacity.",
+                  effect: "balanced",
+                  genotype: "AG",
+                  frequency: "Each genotype ~25-35%",
+                },
+                {
+                  rsid: "rs53576",
+                  gene: "OXTR",
+                  category: "personality",
+                  title: "Empathy and Social Bonding",
+                  description:
+                    "High empathy capacity. Strong in reading social cues and forming emotional bonds.",
+                  effect: "high_empathy",
+                  genotype: "GG",
+                  frequency: "~30% (GG)",
+                },
+                {
+                  rsid: "rs1800955",
+                  gene: "DRD4",
+                  category: "personality",
+                  title: "Novelty Seeking",
+                  description: "Moderate level of novelty seeking.",
+                  effect: "moderate",
+                  genotype: "CT",
+                  frequency: "~25% (CC)",
+                },
+                {
+                  rsid: "rs1801133",
+                  gene: "MTHFR",
+                  category: "disease",
+                  title: "MTHFR C677T Variant",
+                  description:
+                    "~35% reduced enzyme activity. Folic acid supplementation may be beneficial.",
+                  effect: "reduced",
+                  genotype: "AG",
+                  frequency: "~10% (AA), ~40% (AG)",
+                },
+                {
+                  rsid: "rs7903146",
+                  gene: "TCF7L2",
+                  category: "disease",
+                  title: "Type 2 Diabetes Risk",
+                  description:
+                    "~1.4x increased Type 2 diabetes risk. Healthy lifestyle is important.",
+                  effect: "increased",
+                  genotype: "CT",
+                  frequency: "~30% (T allele)",
+                },
+                {
+                  rsid: "rs4988235",
+                  gene: "LCT",
+                  category: "food",
+                  title: "Lactose Tolerance",
+                  description:
+                    "You have lactose tolerance. You can digest dairy products.",
+                  effect: "tolerant",
+                  genotype: "AG",
+                  frequency: "~35% worldwide (tolerant)",
+                },
+                {
+                  rsid: "rs762551",
+                  gene: "CYP1A2",
+                  category: "food",
+                  title: "Caffeine Metabolism",
+                  description:
+                    "Fast caffeine metabolism! Coffee is processed quickly, you can consume more.",
+                  effect: "fast",
+                  genotype: "AA",
+                  frequency: "~45% (AA)",
+                },
+                {
+                  rsid: "rs1726866",
+                  gene: "TAS2R38",
+                  category: "food",
+                  title: "Bitter Taste Perception",
+                  description: "Moderate level of bitter taste perception.",
+                  effect: "medium",
+                  genotype: "CT",
+                  frequency: "~25% (TT)",
+                },
+                {
+                  rsid: "rs9939609",
+                  gene: "FTO",
+                  category: "food",
+                  title: "Obesity Predisposition (FTO)",
+                  description:
+                    "Moderate obesity risk. Portion control is beneficial.",
+                  effect: "moderate",
+                  genotype: "AT",
+                  frequency: "~16% (AA)",
+                },
+                {
+                  rsid: "rs1815739",
+                  gene: "ACTN3",
+                  category: "fitness",
+                  title: "Muscle Type (Sprinter vs Endurance)",
+                  description:
+                    "Mixed muscle type. You are good at both power and endurance sports.",
+                  effect: "mixed",
+                  genotype: "CT",
+                  frequency: "~20% (TT)",
+                },
+                {
+                  rsid: "rs8192678",
+                  gene: "PPARGC1A",
+                  category: "fitness",
+                  title: "Aerobic Capacity",
+                  description: "Increased aerobic capacity potential.",
+                  effect: "enhanced",
+                  genotype: "AG",
+                  frequency: "~35% (A allele)",
+                },
+                {
+                  rsid: "rs1800169",
+                  gene: "CNTF",
+                  category: "fitness",
+                  title: "Muscle Strength Potential",
+                  description: "Moderate increased muscle strength potential.",
+                  effect: "moderate",
+                  genotype: "AG",
+                  frequency: "~20% (A allele)",
+                },
+                {
+                  rsid: "rs9536314",
+                  gene: "KIBRA",
+                  category: "cognitive",
+                  title: "Memory Capacity",
+                  description: "Increased memory capacity.",
+                  effect: "enhanced",
+                  genotype: "CT",
+                  frequency: "~25% (T allele)",
+                },
+                {
+                  rsid: "rs363050",
+                  gene: "SNAP25",
+                  category: "cognitive",
+                  title: "Attention and Concentration",
+                  description: "Increased attention capacity.",
+                  effect: "enhanced",
+                  genotype: "AG",
+                  frequency: "~30% (GG)",
+                },
+                {
+                  rsid: "rs1801260",
+                  gene: "CLOCK",
+                  category: "lifestyle",
+                  title: "Circadian Rhythm (Morning/Evening)",
+                  description:
+                    "Flexible circadian rhythm. You can adapt to both time periods.",
+                  effect: "flexible",
+                  genotype: "AG",
+                  frequency: "~30% each genotype",
+                },
+                {
+                  rsid: "rs1800497",
+                  gene: "DRD2/ANKK1",
+                  category: "lifestyle",
+                  title: "Dopamine Receptor Density",
+                  description:
+                    "Reduced D2 receptor density. May seek more rewards.",
+                  effect: "reduced",
+                  genotype: "AG",
+                  frequency: "~20% (A allele)",
+                },
+                {
+                  rsid: "combo_morning_coffee",
+                  gene: "CYP1A2 + CLOCK",
+                  category: "interesting",
+                  title: "Perfect Morning Coffee Genes",
+                  description:
+                    "You have both fast caffeine metabolism and flexible circadian rhythm!",
+                  effect: "synergy",
+                  genotype: "Combination",
+                  frequency: "~15%",
+                },
+              ],
+            };
+
+            // Generate demo SNP data for helix visualization
+            const demoSnpData = {};
+            const bases = ["A", "T", "C", "G"];
+            for (let i = 0; i < 100; i++) {
+              const b1 = bases[Math.floor(Math.random() * 4)];
+              const b2 = bases[Math.floor(Math.random() * 4)];
+              demoSnpData["rs" + (1000000 + i)] = {
+                genotype: b1 + b2,
+                chromosome: Math.floor(Math.random() * 22) + 1,
+                position: Math.floor(Math.random() * 100000000),
+              };
+            }
+
+            setTimeout(() => {
+              showResults(demoResults, demoSnpData);
+            }, 300);
+          }, 500);
+        }, 500);
+      }
+
+      // Expose functions for Python
+      window.updateLoadingStatus = updateLoadingStatus;
+      window.showResults = showResults;
+
+      // ========================================
+      // DNA HELIX 3D VISUALIZATION
+      // ========================================
+
+      class DNAHelixVisualizer {
+        constructor(canvasId) {
+          this.canvas = document.getElementById(canvasId);
+          this.ctx = this.canvas.getContext("2d");
+          this.width = this.canvas.width;
+          this.height = this.canvas.height;
+          this.centerY = this.height / 2;
+
+          // Animation state
+          this.rotation = 0;
+          this.speed = 1;
+          this.isPlaying = true;
+          this.animationId = null;
+
+          // DNA data
+          this.nucleotides = [];
+          this.nucleotideCounts = { A: 0, T: 0, C: 0, G: 0 };
+
+          // Visual settings
+          this.numPairs = 30;
+          this.helixRadius = 80;
+          this.helixLength = this.width - 100;
+          this.basePairSpacing = this.helixLength / this.numPairs;
+
+          // Colors (bioluminescent theme)
+          this.colors = {
+            A: "#ef4444", // Red - Adenine
+            T: "#3b82f6", // Blue - Thymine
+            C: "#22c55e", // Green - Cytosine
+            G: "#f59e0b", // Amber - Guanine
+            backbone: "rgba(139, 92, 246, 0.8)", // Purple backbone
+            bond: "rgba(148, 163, 184, 0.4)", // Gray bonds
+          };
+
+          // Glow effects
+          this.glowColors = {
+            A: "rgba(239, 68, 68, 0.6)",
+            T: "rgba(59, 130, 246, 0.6)",
+            C: "rgba(34, 197, 94, 0.6)",
+            G: "rgba(245, 158, 11, 0.6)",
+          };
+
+          this.setupControls();
+        }
+
+        setupControls() {
+          const playBtn = document.getElementById("helix-play-btn");
+          const pauseBtn = document.getElementById("helix-pause-btn");
+          const speedSlider = document.getElementById("helix-speed");
+          const speedValue = document.getElementById("speed-value");
+
+          if (playBtn && pauseBtn) {
+            playBtn.addEventListener("click", () => {
+              this.isPlaying = true;
+              playBtn.style.display = "none";
+              pauseBtn.style.display = "flex";
+              this.animate();
+            });
+
+            pauseBtn.addEventListener("click", () => {
+              this.isPlaying = false;
+              pauseBtn.style.display = "none";
+              playBtn.style.display = "flex";
+              if (this.animationId) {
+                cancelAnimationFrame(this.animationId);
+              }
+            });
+          }
+
+          if (speedSlider && speedValue) {
+            speedSlider.addEventListener("input", (e) => {
+              this.speed = parseFloat(e.target.value);
+              speedValue.textContent = this.speed.toFixed(1) + "x";
+            });
+          }
+        }
+
+        setNucleotides(snpData) {
+          // Extract all nucleotides from SNP genotypes
+          this.nucleotides = [];
+          this.nucleotideCounts = { A: 0, T: 0, C: 0, G: 0 };
+
+          Object.values(snpData).forEach((snp) => {
+            const genotype = snp.genotype || "";
+            for (const base of genotype) {
+              if (["A", "T", "C", "G"].includes(base)) {
+                this.nucleotides.push(base);
+                this.nucleotideCounts[base]++;
+              }
+            }
+          });
+
+          // If not enough nucleotides, generate random ones based on distribution
+          while (this.nucleotides.length < this.numPairs * 2) {
+            const randomBase = ["A", "T", "C", "G"][
+              Math.floor(Math.random() * 4)
+            ];
+            this.nucleotides.push(randomBase);
+            this.nucleotideCounts[randomBase]++;
+          }
+
+          // Update stats display
+          this.updateStats();
+        }
+
+        updateStats() {
+          const adenineEl = document.getElementById("adenine-count");
+          const thymineEl = document.getElementById("thymine-count");
+          const cytosineEl = document.getElementById("cytosine-count");
+          const guanineEl = document.getElementById("guanine-count");
+
+          if (adenineEl) adenineEl.textContent = this.nucleotideCounts.A;
+          if (thymineEl) thymineEl.textContent = this.nucleotideCounts.T;
+          if (cytosineEl) cytosineEl.textContent = this.nucleotideCounts.C;
+          if (guanineEl) guanineEl.textContent = this.nucleotideCounts.G;
+        }
+
+        getComplementaryBase(base) {
+          const pairs = { A: "T", T: "A", C: "G", G: "C" };
+          return pairs[base] || "A";
+        }
+
+        draw() {
+          const ctx = this.ctx;
+          ctx.clearRect(0, 0, this.width, this.height);
+
+          // Draw dark gradient background
+          const bgGradient = ctx.createLinearGradient(0, 0, this.width, 0);
+          bgGradient.addColorStop(0, "rgba(10, 14, 23, 0.8)");
+          bgGradient.addColorStop(0.5, "rgba(17, 24, 39, 0.9)");
+          bgGradient.addColorStop(1, "rgba(10, 14, 23, 0.8)");
+          ctx.fillStyle = bgGradient;
+          ctx.fillRect(0, 0, this.width, this.height);
+
+          // Store base positions for z-ordering
+          const elements = [];
+
+          const startX = 50;
+
+          // Calculate all elements with their z-positions
+          for (let i = 0; i < this.numPairs; i++) {
+            const x = startX + i * this.basePairSpacing;
+            const angle = this.rotation + i * 0.4;
+
+            // 3D rotation calculations
+            const y1 = this.centerY + Math.sin(angle) * this.helixRadius;
+            const y2 =
+              this.centerY + Math.sin(angle + Math.PI) * this.helixRadius;
+            const z1 = Math.cos(angle);
+            const z2 = Math.cos(angle + Math.PI);
+
+            // Get nucleotides
+            const baseIndex = i * 2;
+            const base1 = this.nucleotides[baseIndex] || "A";
+            const base2 = this.getComplementaryBase(base1);
+
+            // Scale based on z-position (perspective)
+            const scale1 = 0.5 + (z1 + 1) * 0.3;
+            const scale2 = 0.5 + (z2 + 1) * 0.3;
+            const opacity1 = 0.4 + (z1 + 1) * 0.3;
+            const opacity2 = 0.4 + (z2 + 1) * 0.3;
+
+            // Add bond (hydrogen bond between base pairs)
+            elements.push({
+              type: "bond",
+              x1: x,
+              y1: y1,
+              x2: x,
+              y2: y2,
+              z: (z1 + z2) / 2 - 0.1, // Bonds behind bases
+              opacity: (opacity1 + opacity2) / 2,
+            });
+
+            // Add nucleotide 1
+            elements.push({
+              type: "nucleotide",
+              x: x,
+              y: y1,
+              z: z1,
+              base: base1,
+              scale: scale1,
+              opacity: opacity1,
+            });
+
+            // Add nucleotide 2
+            elements.push({
+              type: "nucleotide",
+              x: x,
+              y: y2,
+              z: z2,
+              base: base2,
+              scale: scale2,
+              opacity: opacity2,
+            });
+          }
+
+          // Sort by z-position (back to front)
+          elements.sort((a, b) => a.z - b.z);
+
+          // Draw backbone first (behind everything)
+          this.drawBackbone(startX);
+
+          // Draw sorted elements
+          elements.forEach((el) => {
+            if (el.type === "bond") {
+              this.drawBond(el.x1, el.y1, el.x2, el.y2, el.opacity);
+            } else if (el.type === "nucleotide") {
+              this.drawNucleotide(el.x, el.y, el.base, el.scale, el.opacity);
+            }
+          });
+
+          // Draw info text
+          this.drawInfoText();
+        }
+
+        drawBackbone(startX) {
+          const ctx = this.ctx;
+
+          // Draw two helical backbones
+          for (let strand = 0; strand < 2; strand++) {
+            ctx.beginPath();
+            ctx.strokeStyle = this.colors.backbone;
+            ctx.lineWidth = 3;
+
+            for (let i = 0; i <= this.numPairs; i++) {
+              const x = startX + i * this.basePairSpacing;
+              const angle = this.rotation + i * 0.4 + strand * Math.PI;
+              const y = this.centerY + Math.sin(angle) * this.helixRadius;
+              const z = Math.cos(angle);
+
+              // Vary line width based on z for 3D effect
+              ctx.lineWidth = 2 + (z + 1) * 1.5;
+              ctx.globalAlpha = 0.3 + (z + 1) * 0.2;
+
+              if (i === 0) {
+                ctx.moveTo(x, y);
+              } else {
+                ctx.lineTo(x, y);
+              }
+            }
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+          }
+        }
+
+        drawBond(x1, y1, x2, y2, opacity) {
+          const ctx = this.ctx;
+
+          // Draw hydrogen bond (dashed line between base pairs)
+          ctx.beginPath();
+          ctx.setLineDash([4, 4]);
+          ctx.strokeStyle = this.colors.bond;
+          ctx.lineWidth = 2;
+          ctx.globalAlpha = opacity * 0.6;
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.globalAlpha = 1;
+        }
+
+        drawNucleotide(x, y, base, scale, opacity) {
+          const ctx = this.ctx;
+          const radius = 12 * scale;
+
+          // Glow effect
+          ctx.beginPath();
+          const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius * 2);
+          gradient.addColorStop(0, this.glowColors[base]);
+          gradient.addColorStop(1, "transparent");
+          ctx.fillStyle = gradient;
+          ctx.globalAlpha = opacity * 0.5;
+          ctx.arc(x, y, radius * 2, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Main circle
+          ctx.beginPath();
+          ctx.fillStyle = this.colors[base];
+          ctx.globalAlpha = opacity;
+          ctx.arc(x, y, radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Inner highlight
+          ctx.beginPath();
+          const highlight = ctx.createRadialGradient(
+            x - radius * 0.3,
+            y - radius * 0.3,
+            0,
+            x,
+            y,
+            radius
+          );
+          highlight.addColorStop(0, "rgba(255, 255, 255, 0.4)");
+          highlight.addColorStop(1, "transparent");
+          ctx.fillStyle = highlight;
+          ctx.arc(x, y, radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Base letter
+          ctx.fillStyle = "#fff";
+          ctx.globalAlpha = opacity;
+          ctx.font = `bold ${Math.round(10 * scale)}px JetBrains Mono`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(base, x, y);
+
+          ctx.globalAlpha = 1;
+        }
+
+        drawInfoText() {
+          const ctx = this.ctx;
+
+          // Draw title
+          ctx.fillStyle = "rgba(148, 163, 184, 0.6)";
+          ctx.font = "11px JetBrains Mono";
+          ctx.textAlign = "left";
+          ctx.fillText("DNA DOUBLE HELIX", 10, 20);
+
+          // Draw rotation info
+          ctx.textAlign = "right";
+          const degrees = Math.round(((this.rotation * 180) / Math.PI) % 360);
+          ctx.fillText(`Rotation: ${degrees}°`, this.width - 10, 20);
+        }
+
+        animate() {
+          if (!this.isPlaying) return;
+
+          this.rotation += 0.02 * this.speed;
+          this.draw();
+
+          this.animationId = requestAnimationFrame(() => this.animate());
+        }
+
+        start(snpData) {
+          this.setNucleotides(snpData);
+
+          // Start paused initially, show play button
+          const playBtn = document.getElementById("helix-play-btn");
+          const pauseBtn = document.getElementById("helix-pause-btn");
+
+          if (playBtn && pauseBtn) {
+            playBtn.style.display = "none";
+            pauseBtn.style.display = "flex";
+          }
+
+          this.isPlaying = true;
+          this.animate();
+        }
+
+        stop() {
+          this.isPlaying = false;
+          if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+          }
+        }
+      }
+
+      // Global helix visualizer instance
+      let helixVisualizer = null;
+
+      function initDNAHelix(snpData) {
+        if (helixVisualizer) {
+          helixVisualizer.stop();
+        }
+        helixVisualizer = new DNAHelixVisualizer("dna-helix-canvas");
+        helixVisualizer.start(snpData);
+      }
+
+      // Expose for Python
+      window.initDNAHelix = initDNAHelix;
+    </script>
+
+    <!-- PyScript Main -->
+    <script type="py">
+      import json
+      from pyscript import document, window
+      from js import console
+      from pyodide.ffi import create_proxy, to_js
+
+      # Import our modules
+      from snp_database import SNP_DATABASE, get_snp_info
+      from dna_analyzer import parse_dna_file, analyze_dna, DNAAnalyzer, detect_format
+
+      def convert_to_js(obj):
+          """Convert Python dict to JavaScript object"""
+          return to_js(obj, dict_converter=window.Object.fromEntries)
+
+      def analyze_dna_content(content):
+          """Analyze DNA content - called from JavaScript"""
+          try:
+              # Convert JsProxy string to Python string if needed
+              content_str = str(content) if not isinstance(content, str) else content
+              console.log("DNA file loaded, starting analysis...")
+
+              # Update status
+              window.updateLoadingStatus("Reading DNA file...", 10)
+
+              # Detect format
+              file_format = detect_format(content_str)
+              format_names = {
+                  'myheritage': 'MyHeritage',
+                  '23andme': '23andMe',
+                  'ancestry': 'AncestryDNA',
+                  'ftdna': 'FamilyTreeDNA',
+                  'csv_generic': 'CSV',
+                  'generic': 'Generic'
+              }
+              format_name = format_names.get(file_format, 'Unknown')
+              console.log(f"Detected format: {format_name}")
+              window.updateLoadingStatus(f"Format detected: {format_name}", 20)
+
+              # Parse the file
+              snps = parse_dna_file(content_str)
+              snp_count = len(snps)
+
+              if snp_count == 0:
+                  window.updateLoadingStatus("Error: No SNPs found. File format may not be supported.", 0)
+                  console.log("No SNPs found in file")
+                  return
+
+              window.updateLoadingStatus(f"{snp_count:,} SNPs found, analyzing...", 40)
+
+              # Analyze
+              analyzer = DNAAnalyzer(snps)
+              results = analyzer.get_full_report()
+
+              window.updateLoadingStatus("Preparing results...", 90)
+
+              # Convert results to JS-friendly format
+              js_results = convert_to_js(results)
+
+              # Convert raw SNP data for helix visualization
+              js_snps = convert_to_js(snps)
+
+              window.updateLoadingStatus("Completed!", 100)
+
+              # Show results with SNP data for helix
+              window.showResults(js_results, js_snps)
+
+          except Exception as e:
+              console.log(f"Error: {str(e)}")
+              import traceback
+              console.log(traceback.format_exc())
+              window.updateLoadingStatus(f"Error: {str(e)}", 0)
+
+      # Expose function to JavaScript
+      window.analyzeDNAContent = analyze_dna_content
+      console.log("DNA Analyzer ready!")
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1316 @@
+/* ================================================
+   DNA ANALYSIS - Modern Dark Theme
+   ================================================ */
+
+:root {
+    /* Color Palette - Bioluminescent Theme */
+    --bg-primary: #0a0e17;
+    --bg-secondary: #111827;
+    --bg-card: #1a2235;
+    --bg-card-hover: #232d42;
+    
+    /* Accent Colors */
+    --accent-cyan: #06d6a0;
+    --accent-cyan-glow: rgba(6, 214, 160, 0.3);
+    --accent-purple: #8b5cf6;
+    --accent-purple-glow: rgba(139, 92, 246, 0.3);
+    --accent-pink: #ec4899;
+    --accent-blue: #3b82f6;
+    --accent-amber: #f59e0b;
+    --accent-red: #ef4444;
+    --accent-green: #22c55e;
+    
+    /* Text Colors */
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    
+    /* Nucleotide Colors */
+    --color-adenine: #ef4444;
+    --color-thymine: #3b82f6;
+    --color-cytosine: #22c55e;
+    --color-guanine: #f59e0b;
+    
+    /* Borders & Shadows */
+    --border-color: rgba(148, 163, 184, 0.1);
+    --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 40px var(--accent-cyan-glow);
+    
+    /* Spacing */
+    --container-max: 1200px;
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    
+    /* Border Radius */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+    
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 250ms ease;
+    --transition-slow: 400ms ease;
+}
+
+/* ================================================
+   Reset & Base Styles
+   ================================================ */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ================================================
+   DNA Background Animation
+   ================================================ */
+
+.dna-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.helix-strand {
+    position: absolute;
+    width: 100%;
+    height: 200%;
+    background: 
+        radial-gradient(ellipse 2px 8px at 20% 0%, var(--accent-cyan) 0%, transparent 100%),
+        radial-gradient(ellipse 2px 8px at 80% 10%, var(--accent-purple) 0%, transparent 100%),
+        radial-gradient(ellipse 2px 8px at 30% 20%, var(--accent-cyan) 0%, transparent 100%),
+        radial-gradient(ellipse 2px 8px at 70% 30%, var(--accent-purple) 0%, transparent 100%),
+        radial-gradient(ellipse 2px 8px at 25% 40%, var(--accent-cyan) 0%, transparent 100%),
+        radial-gradient(ellipse 2px 8px at 75% 50%, var(--accent-purple) 0%, transparent 100%),
+        radial-gradient(ellipse 2px 8px at 35% 60%, var(--accent-cyan) 0%, transparent 100%),
+        radial-gradient(ellipse 2px 8px at 65% 70%, var(--accent-purple) 0%, transparent 100%),
+        radial-gradient(ellipse 2px 8px at 20% 80%, var(--accent-cyan) 0%, transparent 100%),
+        radial-gradient(ellipse 2px 8px at 80% 90%, var(--accent-purple) 0%, transparent 100%);
+    background-size: 100% 50%;
+    opacity: 0.15;
+    animation: helix-float 20s ease-in-out infinite;
+}
+
+.strand-2 {
+    animation-delay: -10s;
+    animation-direction: reverse;
+}
+
+@keyframes helix-float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-25%) rotate(5deg); }
+}
+
+/* Gradient Overlay */
+.dna-background::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+        radial-gradient(circle at 30% 20%, var(--accent-cyan-glow) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, var(--accent-purple-glow) 0%, transparent 50%);
+    opacity: 0.4;
+}
+
+/* ================================================
+   Container & Layout
+   ================================================ */
+
+.container {
+    position: relative;
+    z-index: 1;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ================================================
+   Header
+   ================================================ */
+
+.header {
+    text-align: center;
+    padding: var(--spacing-2xl) 0;
+    animation: fade-in-down 0.6s ease-out;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.dna-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--accent-cyan);
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { filter: drop-shadow(0 0 8px var(--accent-cyan-glow)); }
+    50% { filter: drop-shadow(0 0 20px var(--accent-cyan)); }
+}
+
+.logo h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+}
+
+.logo .highlight {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.tagline {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+}
+
+/* ================================================
+   Upload Section
+   ================================================ */
+
+.upload-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xl);
+    animation: fade-in-up 0.6s ease-out 0.2s backwards;
+}
+
+.upload-card {
+    width: 100%;
+    max-width: 500px;
+}
+
+.upload-area {
+    background: var(--bg-card);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-2xl);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-area::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent-cyan-glow), var(--accent-purple-glow));
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.upload-area:hover,
+.upload-area.dragover {
+    border-color: var(--accent-cyan);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+}
+
+.upload-area:hover::before,
+.upload-area.dragover::before {
+    opacity: 0.1;
+}
+
+.upload-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--spacing-md);
+}
+
+.upload-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    border-radius: 50%;
+    margin-bottom: var(--spacing-sm);
+}
+
+.upload-icon svg {
+    width: 32px;
+    height: 32px;
+    color: white;
+}
+
+.upload-content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.upload-content p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.upload-btn {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    color: white;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    margin-top: var(--spacing-sm);
+}
+
+.upload-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px -10px var(--accent-cyan);
+}
+
+.demo-btn {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    margin-top: var(--spacing-sm);
+}
+
+.demo-btn:hover {
+    color: var(--accent-purple);
+    border-color: var(--accent-purple);
+    background: rgba(139, 92, 246, 0.1);
+}
+
+.file-info {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    margin-top: var(--spacing-md);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+}
+
+.file-name {
+    color: var(--accent-cyan);
+}
+
+.file-size {
+    color: var(--text-muted);
+}
+
+/* Privacy Notice */
+.privacy-notice {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: rgba(6, 214, 160, 0.1);
+    border: 1px solid rgba(6, 214, 160, 0.2);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    color: var(--accent-cyan);
+    max-width: 500px;
+}
+
+.privacy-notice svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+/* ================================================
+   Loading Section
+   ================================================ */
+
+.loading-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fade-in 0.4s ease-out;
+}
+
+.loading-card {
+    text-align: center;
+    padding: var(--spacing-2xl);
+}
+
+/* DNA Loader */
+.dna-loader {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.nucleotide {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    animation: nucleotide-bounce 1.4s ease-in-out infinite;
+}
+
+.nucleotide.a {
+    background: var(--color-adenine);
+    animation-delay: 0s;
+}
+
+.nucleotide.t {
+    background: var(--color-thymine);
+    animation-delay: 0.2s;
+}
+
+.nucleotide.c {
+    background: var(--color-cytosine);
+    animation-delay: 0.4s;
+}
+
+.nucleotide.g {
+    background: var(--color-guanine);
+    animation-delay: 0.6s;
+}
+
+@keyframes nucleotide-bounce {
+    0%, 80%, 100% {
+        transform: scale(0.6);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.loading-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.loading-status {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+}
+
+.progress-bar {
+    width: 300px;
+    height: 4px;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+    border-radius: var(--radius-sm);
+    width: 0%;
+    transition: width var(--transition-base);
+}
+
+/* ================================================
+   Results Section
+   ================================================ */
+
+.results-section {
+    animation: fade-in-up 0.6s ease-out;
+}
+
+/* Stats Overview */
+/* Profile Header */
+.profile-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.profile-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Stats Container */
+.chart-stats-container {
+    margin-bottom: var(--spacing-xl);
+}
+
+.stats-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    text-align: center;
+    transition: all var(--transition-base);
+}
+
+.stat-card.stat-positive {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.stat-card.stat-positive .stat-value {
+    color: #22c55e;
+}
+
+.stat-card.stat-negative {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.stat-card.stat-negative .stat-value {
+    color: #ef4444;
+}
+
+.stat-card.stat-neutral {
+    background: rgba(100, 116, 139, 0.1);
+    border-color: rgba(100, 116, 139, 0.3);
+}
+
+.stat-card.stat-neutral .stat-value {
+    color: #94a3b8;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 20px var(--accent-cyan-glow);
+}
+
+.stat-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: var(--spacing-xs);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Effect Filter Tabs */
+.effect-filter-tabs {
+    display: flex;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-md);
+    justify-content: center;
+    flex-wrap: wrap;
+    border: 1px solid var(--border-color);
+}
+
+.effect-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--bg-secondary);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.effect-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+}
+
+.effect-btn.active {
+    color: var(--text-primary);
+    border-color: var(--accent-cyan);
+    background: rgba(34, 211, 238, 0.1);
+}
+
+.effect-btn-positive.active {
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+}
+
+.effect-btn-negative.active {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.effect-btn-neutral.active {
+    border-color: #94a3b8;
+    background: rgba(100, 116, 139, 0.1);
+    color: #94a3b8;
+}
+
+.effect-icon {
+    font-size: 1rem;
+}
+
+.effect-text {
+    font-weight: 600;
+}
+
+/* Category Tabs */
+.category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-sm);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+}
+
+.tab-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+}
+
+.tab-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-card);
+}
+
+.tab-btn.active {
+    color: var(--accent-cyan);
+    background: var(--bg-card);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 10px var(--accent-cyan-glow);
+}
+
+.tab-icon {
+    font-size: 1rem;
+}
+
+/* Results Grid */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+/* Result Card */
+.result-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    transition: all var(--transition-base);
+    animation: card-appear 0.5s ease-out backwards;
+}
+
+@keyframes card-appear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+.result-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-purple);
+    box-shadow: 0 20px 40px -20px rgba(139, 92, 246, 0.3);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.card-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Badge Colors */
+.badge-interesting {
+    background: rgba(139, 92, 246, 0.2);
+    color: var(--accent-purple);
+}
+
+.badge-extreme_rare {
+    background: rgba(236, 72, 153, 0.2);
+    color: var(--accent-pink);
+}
+
+.badge-rare {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--accent-amber);
+}
+
+.badge-personality {
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--accent-blue);
+}
+
+.badge-disease {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--accent-red);
+}
+
+.badge-food {
+    background: rgba(34, 197, 94, 0.2);
+    color: var(--accent-green);
+}
+
+.badge-fitness {
+    background: rgba(6, 214, 160, 0.2);
+    color: var(--accent-cyan);
+}
+
+.badge-cognitive {
+    background: rgba(139, 92, 246, 0.2);
+    color: var(--accent-purple);
+}
+
+.badge-lifestyle {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--accent-amber);
+}
+
+.badge-appearance {
+    background: rgba(168, 85, 247, 0.2);
+    color: #a855f7;
+}
+
+.badge-longevity {
+    background: rgba(20, 184, 166, 0.2);
+    color: #14b8a6;
+}
+
+.badge-immunity {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+}
+
+.card-rsid {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Effect-based card styling */
+.result-card.effect-positive {
+    border-left: 4px solid #22c55e;
+}
+
+.result-card.effect-positive:hover {
+    border-color: #22c55e;
+    box-shadow: 0 20px 40px -20px rgba(34, 197, 94, 0.3);
+}
+
+.result-card.effect-negative {
+    border-left: 4px solid #ef4444;
+}
+
+.result-card.effect-negative:hover {
+    border-color: #ef4444;
+    box-shadow: 0 20px 40px -20px rgba(239, 68, 68, 0.3);
+}
+
+.result-card.effect-neutral {
+    border-left: 4px solid #64748b;
+}
+
+.result-card.effect-neutral:hover {
+    border-color: var(--accent-purple);
+    box-shadow: 0 20px 40px -20px rgba(139, 92, 246, 0.3);
+}
+
+/* Effect indicator styling */
+.effect-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.effect-indicator.effect-positive {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+}
+
+.effect-indicator.effect-negative {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+.effect-indicator.effect-neutral {
+    background: rgba(100, 116, 139, 0.15);
+    color: #94a3b8;
+}
+
+.card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.4;
+}
+
+.card-description {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.6;
+}
+
+.card-genotype {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.genotype-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.genotype-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--accent-cyan);
+    letter-spacing: 0.1em;
+}
+
+.card-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8125rem;
+}
+
+.detail-label {
+    color: var(--text-muted);
+}
+
+.detail-value {
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-align: right;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--text-muted);
+}
+
+.empty-state svg {
+    width: 64px;
+    height: 64px;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* ================================================
+   Disclaimer
+   ================================================ */
+
+.disclaimer {
+    margin-top: auto;
+    padding-top: var(--spacing-xl);
+    animation: fade-in 0.6s ease-out 0.4s backwards;
+}
+
+.disclaimer-content {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.disclaimer-content svg {
+    width: 24px;
+    height: 24px;
+    color: var(--accent-red);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.disclaimer-content strong {
+    color: var(--accent-red);
+}
+
+/* ================================================
+   Animations
+   ================================================ */
+
+@keyframes fade-in {
+    from { opacity: 0; }
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+@keyframes fade-in-down {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* ================================================
+   Responsive Design
+   ================================================ */
+
+@media (max-width: 768px) {
+    .container {
+        padding: var(--spacing-md);
+    }
+    
+    .logo h1 {
+        font-size: 2rem;
+    }
+    
+    .dna-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .stats-overview {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .category-tabs {
+        justify-content: center;
+    }
+    
+    .tab-text {
+        display: none;
+    }
+    
+    .tab-icon {
+        font-size: 1.25rem;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .upload-area {
+        padding: var(--spacing-xl);
+    }
+}
+
+@media (max-width: 480px) {
+    .logo h1 {
+        font-size: 1.75rem;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .privacy-notice {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* ================================================
+   DNA Helix Visualization Section
+   ================================================ */
+
+.dna-helix-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    overflow: hidden;
+    position: relative;
+}
+
+.dna-helix-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, var(--accent-cyan-glow) 0%, transparent 60%);
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.helix-header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    position: relative;
+    z-index: 1;
+}
+
+.helix-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: var(--spacing-xs);
+}
+
+.helix-header p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.dna-helix-container {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(10, 14, 23, 0.9), rgba(17, 24, 39, 0.95));
+    border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+#dna-helix-canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.helix-controls {
+    position: absolute;
+    bottom: var(--spacing-md);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: rgba(17, 24, 39, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+}
+
+.helix-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.helix-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px var(--accent-cyan-glow);
+}
+
+.helix-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.speed-slider {
+    width: 80px;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--bg-secondary);
+    border-radius: 2px;
+    outline: none;
+}
+
+.speed-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.speed-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 10px var(--accent-cyan-glow);
+}
+
+.speed-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+}
+
+.speed-label span {
+    color: var(--accent-cyan);
+}
+
+/* Nucleotide Legend */
+.nucleotide-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px currentColor;
+}
+
+.legend-color.adenine {
+    background: var(--color-adenine);
+    color: var(--color-adenine);
+}
+
+.legend-color.thymine {
+    background: var(--color-thymine);
+    color: var(--color-thymine);
+}
+
+.legend-color.cytosine {
+    background: var(--color-cytosine);
+    color: var(--color-cytosine);
+}
+
+.legend-color.guanine {
+    background: var(--color-guanine);
+    color: var(--color-guanine);
+}
+
+/* DNA Stats Row */
+.dna-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.dna-stat {
+    text-align: center;
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-base);
+}
+
+.dna-stat:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-cyan);
+}
+
+.dna-stat:nth-child(1) .dna-stat-value { color: var(--color-adenine); }
+.dna-stat:nth-child(2) .dna-stat-value { color: var(--color-thymine); }
+.dna-stat:nth-child(3) .dna-stat-value { color: var(--color-cytosine); }
+.dna-stat:nth-child(4) .dna-stat-value { color: var(--color-guanine); }
+
+.dna-stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: var(--spacing-xs);
+}
+
+.dna-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Responsive adjustments for DNA Helix */
+@media (max-width: 768px) {
+    .dna-helix-container {
+        margin: 0 calc(-1 * var(--spacing-md));
+    }
+    
+    #dna-helix-canvas {
+        height: 250px;
+    }
+    
+    .helix-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+        bottom: var(--spacing-sm);
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+    
+    .speed-slider {
+        width: 60px;
+    }
+    
+    .nucleotide-legend {
+        gap: var(--spacing-md);
+    }
+    
+    .legend-item {
+        font-size: 0.75rem;
+    }
+    
+    .dna-stats-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .dna-stats-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .dna-stat-value {
+        font-size: 1.25rem;
+    }
+}
+
+/* ================================================
+   PyScript Loading State
+   ================================================ */
+
+py-script {
+    display: none;
+}
+
+/* Hide PyScript default styles */
+.py-error {
+    display: none !important;
+}
+
