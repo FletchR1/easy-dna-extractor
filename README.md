@@ -1,9 +1,9 @@
-# 🧬 DNA Data Extractor
+# 🧬 Easy DNA Data Extractor
 
 
 ## What is this project ?
 
-It's simply extracting data from your DNA by anyone.
+It's simply extracting meaningful easy to understand data from your DNA data.
 
 A free alternative to 23andMe & MyHeritage Reports.
 
@@ -22,7 +22,10 @@ Sleep Pattern.
 
 DNA analysis services like **MyHeritage** charge **$19** for health reports, and other platforms have their own (often higher) pricing tiers. I wanted to create a **free alternative** that anyone can use without paying these fees.
 
+## Supported DNA Data Format
 
+- 23andMe
+- MyHeritage
 
 ##  Disclaimer
 
@@ -55,4 +58,3 @@ Feel free to fork, modify, and submit PRs!
 ##  License
 
 Open source - feel free to use and modify.
-
