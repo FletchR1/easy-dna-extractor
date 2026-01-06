@@ -26,6 +26,9 @@ DNA analysis services like **MyHeritage** charge **$19** for health reports, and
 
 - 23andMe
 - MyHeritage
+- FamilyTreeDNA
+- LivingDNA
+- AncestryDNA
 
 ##  Disclaimer
 
